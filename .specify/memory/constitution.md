@@ -1,22 +1,17 @@
 <!--
-Sync Impact Report
-- Version change: template (unversioned) -> 1.0.0
-- Modified principles:
-  - Placeholder Principle 1 -> I. 逐步可執行的學習節奏
-  - Placeholder Principle 2 -> II. 清楚可讀的 Python
-  - Placeholder Principle 3 -> III. 物件與遊戲迴圈責任清楚
-  - Placeholder Principle 4 -> IV. 可觀察行為必須驗收
-  - Placeholder Principle 5 -> V. 以學習為中心的最小複雜度
-- Added sections:
-  - 教學與技術限制
-  - 開發流程與品質閘門
-- Removed sections: none
-- Deferred TODOs: none
+同步影響報告
+- 版本變更：1.0.0 -> 1.1.0
+- 修改原則：無
+- 新增原則：
+  - VI. SDD 文件繁體中文標準
+- 新增章節：無
+- 移除章節：無
+- 延後 TODO：無
 -->
 
 # PythonSDD 專案憲章
 
-## Core Principles
+## 核心原則
 
 ### I. 逐步可執行的學習節奏
 
@@ -74,6 +69,20 @@ MUST 先用最小範例說明，再加入主程式。程式仍小且適合教學
 理由：目前的範例以單檔 Pygame 程式和單一外部套件完成完整遊戲循環；控制
 複雜度能把注意力放在 Python 基礎與遊戲邏輯上。
 
+### VI. SDD 文件繁體中文標準
+
+所有由 SDD 流程建立、更新或審查的文件 MUST 以繁體中文撰寫。這包括
+`spec.md`、`plan.md`、`tasks.md`、`research.md`、`data-model.md`、
+`quickstart.md`、`contracts/`、checklist 及相關審查紀錄；文件的標題、段落
+說明、需求、驗收條件、設計決策與表格文字 MUST 使用繁體中文。程式碼區塊、
+程式識別字、命令、檔案路徑、套件名稱、API／協定名稱及必要的引用原文 MAY
+保留原文；規範關鍵字 `MUST`、`SHOULD`、`MAY` 亦可保留。若原文內容影響
+理解，文件 MUST 以繁體中文補充說明。SDD 文件的
+新增與審查 MUST 檢查此語言要求。
+
+理由：統一文件語言能讓主要開發與教學團隊直接閱讀、審查、驗收與維護規格，
+並減少需求在不同語言間轉譯時的歧義。
+
 ## 教學與技術限制
 
 - 執行環境以 Python 虛擬環境為準；目前外部依賴為 `pygame==2.6.1`。
@@ -97,7 +106,7 @@ MUST 先用最小範例說明，再加入主程式。程式仍小且適合教學
 5. 實作完成後使用 `$speckit-converge`，確認程式行為、spec、plan、tasks
    與本憲章一致；未完成的行為 MUST 明確保留在 tasks 中。
 
-## Governance
+## 治理
 
 本憲章是本專案的開發依據。每份 spec、plan、task 與完成檢查 MUST 確認
 是否符合本憲章；若學習目標需要例外，必須在相關文件中寫明原因、影響與
@@ -109,4 +118,4 @@ MUST 先用最小範例說明，再加入主程式。程式仍小且適合教學
 PATCH。每完成一個重要課程階段或證明已掌握新的程式能力時， SHOULD 重新
 檢視憲章是否仍然合適；不得為尚未學會的技術預先加入不必要的強制規範。
 
-**Version**: 1.0.0 | **Ratified**: 2026-08-26 | **Last Amended**: 2026-08-26
+**版本**：1.1.0 | **核定日期**：2026-08-26 | **最後修訂**：2026-08-26
