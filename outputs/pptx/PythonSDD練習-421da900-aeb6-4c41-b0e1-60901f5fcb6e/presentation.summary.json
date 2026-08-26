@@ -1,0 +1,150 @@
+{
+  "source": "/var/folders/k0/k20mvlpn0790n98d6c90pf1c0000gn/T/browser-use/exports/PythonSDD練習-421da900-aeb6-4c41-b0e1-60901f5fcb6e.pptx",
+  "exported_at": "2026-08-25T05:29:26.414412+00:00",
+  "slide_count": 11,
+  "slides": [
+    {
+      "index": 1,
+      "slide_file": "ppt/slides/slide1.xml",
+      "text": [
+        "Day1"
+      ],
+      "speaker_notes": [],
+      "media_count": 0,
+      "media": [],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide1.xml"
+      ]
+    },
+    {
+      "index": 2,
+      "slide_file": "ppt/slides/slide2.xml",
+      "text": [],
+      "speaker_notes": [],
+      "media_count": 1,
+      "media": [
+        "../media/image2.png"
+      ],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide2.xml"
+      ]
+    },
+    {
+      "index": 3,
+      "slide_file": "ppt/slides/slide3.xml",
+      "text": [],
+      "speaker_notes": [],
+      "media_count": 1,
+      "media": [
+        "../media/image6.png"
+      ],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide3.xml"
+      ]
+    },
+    {
+      "index": 4,
+      "slide_file": "ppt/slides/slide4.xml",
+      "text": [],
+      "speaker_notes": [],
+      "media_count": 1,
+      "media": [
+        "../media/image4.png"
+      ],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide4.xml"
+      ]
+    },
+    {
+      "index": 5,
+      "slide_file": "ppt/slides/slide5.xml",
+      "text": [],
+      "speaker_notes": [],
+      "media_count": 1,
+      "media": [
+        "../media/image1.png"
+      ],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide5.xml"
+      ]
+    },
+    {
+      "index": 6,
+      "slide_file": "ppt/slides/slide6.xml",
+      "text": [],
+      "speaker_notes": [],
+      "media_count": 1,
+      "media": [
+        "../media/image7.png"
+      ],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide6.xml"
+      ]
+    },
+    {
+      "index": 7,
+      "slide_file": "ppt/slides/slide7.xml",
+      "text": [],
+      "speaker_notes": [],
+      "media_count": 1,
+      "media": [
+        "../media/image9.png"
+      ],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide7.xml"
+      ]
+    },
+    {
+      "index": 8,
+      "slide_file": "ppt/slides/slide8.xml",
+      "text": [],
+      "speaker_notes": [],
+      "media_count": 1,
+      "media": [
+        "../media/image5.png"
+      ],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide8.xml"
+      ]
+    },
+    {
+      "index": 9,
+      "slide_file": "ppt/slides/slide9.xml",
+      "text": [],
+      "speaker_notes": [],
+      "media_count": 1,
+      "media": [
+        "../media/image8.png"
+      ],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide9.xml"
+      ]
+    },
+    {
+      "index": 10,
+      "slide_file": "ppt/slides/slide10.xml",
+      "text": [],
+      "speaker_notes": [],
+      "media_count": 1,
+      "media": [
+        "../media/image3.png"
+      ],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide10.xml"
+      ]
+    },
+    {
+      "index": 11,
+      "slide_file": "ppt/slides/slide11.xml",
+      "text": [
+        "Day2"
+      ],
+      "speaker_notes": [],
+      "media_count": 0,
+      "media": [],
+      "notes_files": [
+        "ppt/notesSlides/notesSlide11.xml"
+      ]
+    }
+  ]
+}

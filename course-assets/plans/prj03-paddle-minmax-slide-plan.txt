@@ -1,0 +1,97 @@
+課程名稱：prj03_paddle.py｜Paddle 移動邊界與 min/max
+來源：Day1/prj03_paddle.py（以目前檔案的 raw line number 為準）
+目標對象：Python／Pygame 入門學生
+溝通任務：讓學生看懂 Paddle 的左邊座標為什麼只能落在 0～680，以及第 54 行如何用 min() 與 max() 將每次移動後的位置夾回安全範圍。
+核心結論：`rect.x` 是底板左邊的位置；右邊界要先扣掉底板寬度，所以 `WIDTH - self.rect.width = 800 - 120 = 680`，再用 `max(0, min(...))` 同時守住左右兩側。
+敘事弧線：看見出界問題 → 讀懂座標與物件寬度 → 推導 680 → 拆解 min/max → 對照原始程式 → 用例子驗證 → 推廣到不同寬度。
+視覺方向：16:9 橫式、滿版教學圖卡；淺色紙張／教室資訊圖風格，深藍座標與程式碼、珊瑚紅出界警示、薄荷綠安全區、圓潤可愛教學機器人；每頁一個主畫面，文字少而大，程式碼頁使用白底亮色 editor。
+外部來源：無；所有程式與數字均取自 Day1/prj03_paddle.py。
+
+=== Teaching-order table ===
+| 順序 | 程式碼區塊 | 對應程式碼 | 區塊標題 | 核心概念 | 教學重點 | 類比/應用 | 串連說明 |
+|---|---|---|---|---|---|---|---|
+| 1 | 遊戲基本設定 | 10-12 | 先知道畫布多大 | WIDTH、HEIGHT 是畫面尺寸 | 800×600 決定座標可用範圍 | 像一張 800×600 的紙 | 下一步要看物件放在哪裡 |
+| 2 | Paddle 初始化 | 38-44 | 底板有自己的矩形 | `pygame.Rect`、`rect.x`、`rect.width` | `rect.x` 是左邊，不是中心；寬度是 120 | 像一張有寬度的紙條 | 因此右邊不能只看 WIDTH |
+| 3 | Paddle 移動 | 46-53 | 每幀移動一小步 | direction、speed、`rect.x += ...` | 左右鍵改變 direction，再更新 x | 像每次走 8 格 | 只移動會造成出界 |
+| 4 | 邊界推導 | 53-54 與 10、42 | 右邊界要扣掉物件寬度 | `rect.x + rect.width <= WIDTH` | 左邊最小 0，左邊最大 800-120=680 | 門框寬度要留給整張紙條 | 得到安全區間 0～680 |
+| 5 | min/max 夾住 | 54 | 兩道數字閘門 | `min` 守上限、`max` 守下限 | 先壓到不超過 680，再抬回不低於 0 | 像護欄把球留在場內 | 回到完整程式碼理解 |
+| 6 | 驗證與泛化 | 54 | 任何 x 都回到安全區 | -8、420、688 三例；寬度改變時公式仍成立 | 公式不是寫死 680，而是由 WIDTH 與 width 算出 | 換大／小底板仍能自動適應 | 收束成可重用規則 |
+
+=== Slide table ===
+| 投影片頁數 | 投影片標題 | 對應教學順序 | 核心問題 | 教學重點 | 建議畫面內容 | 圖片中保留文字 | 程式碼呈現方式 | 避免事項 | 是否需要生圖 |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | Paddle 為什麼不能跑出畫面？ | 1-3 | 我們到底要限制什麼？ | 先看見遊戲底板與出界問題 | Breakout 場景、左右邊界、底板 | `Paddle 為什麼不能跑出畫面？`、`用 min()＋max() 守住移動範圍`、`WIDTH = 800`、`paddle.width = 120` | 不放完整程式碼；用場景圖 | 不塞長段文字；不使用深色 editor | 是 |
+| 2 | 先搞懂：畫面是 800×600 的座標平面 | 1-2 | `rect.x` 到底代表哪裡？ | 0 在左／上；800、600 是右／下邊界；底板有寬度 | 800×600 畫布、x/y 軸、底板左邊與寬度標註 | `WIDTH = 800`、`HEIGHT = 600`、`rect.x = 左邊`、`rect.width = 120` | 不放程式碼；用座標圖 | 不把 rect.x 說成中心點 | 是 |
+| 3 | 每一幀，底板先移動一小步 | 3 | 按鍵如何改變 x？ | direction 為 -1／0／+1；speed=8；x 每幀增加或減少 8 | 鍵盤、三種 direction、前後位置 | `rect.x += direction * speed`、`direction = -1 / 0 / +1`、`speed = 8` | 放一行短程式碼 | 不混入 min/max | 是 |
+| 4 | 只移動、不限制，底板就會穿牆 | 3-4 | 出界是怎麼發生的？ | x=-8 會超過左邊；x=688 會讓右邊到 808 | 左右兩個錯誤案例、紅色出界區 | `左邊不能 < 0`、`右邊不能 > 800`、`x = 688 → 右邊 = 808` | 不放完整程式碼；用數字示意 | 不把可用的 x 上限誤寫成 800 | 是 |
+| 5 | 右邊界不是 800，而是 680 | 4 | 680 是怎麼算出來的？ | 右邊 = 左邊 + 寬度；要讓右邊≤800，所以左邊≤800-120 | 尺規與代數推導：`x + 120 ≤ 800` → `x ≤ 680` | `rect.x + rect.width ≤ WIDTH`、`800 - 120 = 680`、`安全範圍：0～680` | 放公式，不放長程式碼 | 不省略扣掉物件寬度的原因 | 是 |
+| 6 | min() 先守住右邊，max() 再守住左邊 | 5 | 兩個函式各自做什麼？ | `min(x,680)` 限制上限；`max(0,...)` 限制下限；順序清楚 | 兩道閘門與三個數字例子 | `min(x, 680)`、`max(0, …)`、`max(0, min(x, 680))`、`上限 680`、`下限 0` | 放短公式與例子 | 不讓兩個函式角色混在一起 | 是 |
+| 7 | 把整個想法放回第 54 行 | 2-5 | 原始程式碼如何一次完成？ | 第 53 行先移動；第 54 行把 x 夾在 0～680；保留父層定位 | 亮色 editor＋右側箭頭拆解 | `class Paddle:`、`def update(self, keys):`、`self.rect.x += direction * self.speed`、`self.rect.x = max(0, min(self.rect.x, WIDTH - self.rect.width))`、`第 54 行` | 亮色 editor，顯示 raw 行號 38、46、53、54，省略列有真實範圍 | 不使用深色 editor；不重排原始縮排 | 是 |
+| 8 | 用三個數字測試：任何 x 都會回到 0～680 | 5-6 | 夾住後真的安全嗎？ | -8→0、420→420、688→680；結果都在區間內 | 三條數字流程，輸入→min→max→結果 | `-8 → 0`、`420 → 420`、`688 → 680`、`0 ≤ x ≤ 680` | 不放完整程式碼；用流程算式 | 不加入來源沒有的案例或變數 | 是 |
+| 9 | 換一個底板寬度，公式也會自動更新 | 6 | 這個規則能重複使用嗎？ | `最大左邊位置 = WIDTH - 物件寬度`；寬度 200→600、80→720 | 兩個尺寸對照、公式收束 | `最大左邊位置 = WIDTH - 物件寬度`、`800 - 200 = 600`、`800 - 80 = 720`、`min/max = 夾住數字` | 不放完整程式碼；用公式圖解 | 不把 680 當成永遠固定的常數 | 是 |
+
+=== Code review table ===
+| 投影片頁數 | 片段ID | 程式碼狀態 | 行號基準 | 可見定位上下文 | 螢光筆範圍 | 審核注意 |
+|---|---|---|---|---|---|---|
+| 7 | Code Block P03-54 | 原始程式碼 | Day1/prj03_paddle.py raw lines | `class Paddle`、`def update`、省略 39-45、47-52 | 第 53-54 行；第 54 行特別強調 | 保留 `rect.x` 左邊座標意義；縮排必須落在 `update` 內 |
+
+=== Code Block P03-54 ===
+```diff
+  38 class Paddle:
+  39     """Paddle 負責讀取方向並守住畫面邊界。"""
+  40
+  41     def __init__(self):
+  42         self.rect = pygame.Rect(0, 0, 120, 16)
+  43         self.rect.midbottom = (WIDTH // 2, HEIGHT - 34)
+  44         self.speed = 8
+  45
+  46     def update(self, keys):
+  47         direction = 0
+  48         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+  49             direction -= 1
+  50         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+  51             direction += 1
+  52
+  53         self.rect.x += direction * self.speed
+  54         self.rect.x = max(0, min(self.rect.x, WIDTH - self.rect.width))
+```
+可見生圖版本為簡化定位版：`38 class Paddle:`、`46 def update(self, keys):`、`47-52 ...`、`53 ...`、`54 ...`；第 54 行用淡色螢光筆標示。
+
+=== Source-asset map ===
+| 資產 | 角色 | 處理 |
+|---|---|---|
+| `Day1/prj03_paddle.py` | 唯一真實程式來源 | 直接核對 WIDTH、Paddle 寬度、速度與第 54 行；不放 API key 或其他外部素材 |
+| Google Slides 目前分頁 | 交付目的地 | 只在新頁插入圖卡；不刪除或覆寫既有內容 |
+
+=== Generation status ===
+| 頁數 | 檔案 | 狀態 | QA 備註 |
+|---|---|---|---|
+| 1 | `course-assets/images/prj03-paddle-minmax/slide-01.png` | 已採用 | 1672×941；標題、WIDTH=800、paddle.width=120 清楚 |
+| 2 | `course-assets/images/prj03-paddle-minmax/slide-02.png` | 已採用 | 1672×941；座標四角、rect.x 左邊、rect.width=120 清楚 |
+| 3 | `course-assets/images/prj03-paddle-minmax/slide-03.png` | 已採用 | 1672×941；direction、speed、短程式碼可讀 |
+| 4 | `course-assets/images/prj03-paddle-minmax/slide-04.png` | 已採用 | 1672×941；-8、688、808 與左右出界警示一致 |
+| 5 | `course-assets/images/prj03-paddle-minmax/slide-05.png` | 已採用 | 1672×941；代數推導完整，680 被明確標為上限 |
+| 6 | `course-assets/images/prj03-paddle-minmax/slide-06.png` | 已採用 | 1672×941；min 守上限、max 守下限，巢狀公式正確 |
+| 7 | `course-assets/images/prj03-paddle-minmax/slide-07.png` | 已採用 | 1672×941；亮色 editor、raw 行號 38/46/47-52/53/54、縮排與第 54 行可讀 |
+| 8 | `course-assets/images/prj03-paddle-minmax/slide-08.png` | 已採用（重生 1 次） | 初稿因流程圖畫成 max→min 而淘汰；採用版明確為先 min、再 max |
+| 9 | `course-assets/images/prj03-paddle-minmax/slide-09.png` | 已採用 | 1672×941；200→600、80→720 與可重用公式清楚 |
+
+=== Pre-generation QA gate ===
+- [x] 來源檔已用 `nl -ba` 核對；WIDTH=800、HEIGHT=600、Paddle 寬度=120、速度=8、第 54 行公式均有依據。
+- [x] 每頁只保留一個核心問題；文字短、正體中文、16:9 橫式。
+- [x] 右邊界推導明確寫成 `WIDTH - self.rect.width`，不把 `WIDTH` 直接當成 `rect.x` 上限。
+- [x] 程式碼頁保留父層 `class`／`def`、真實行號與省略範圍。
+- [x] 交付方式為每頁一張完整滿版圖卡；匯入後逐頁確認只含一張滿版圖片，不新增原生文字框。
+
+=== Final QA ledger ===
+逐張原尺寸檢查結果：
+- 1：通過；主標題、`min()`＋`max()`、800、120 可讀，安全範圍與遊戲畫面一致。
+- 2：通過；`WIDTH = 800`、`HEIGHT = 600`、`rect.x = 左邊`、`rect.width = 120` 與座標角落標註清楚。
+- 3：通過；`rect.x += direction * speed`、`direction = -1 / 0 / +1`、`speed = 8` 正確，未提前引入 min/max。
+- 4：通過；左側 `x = -8`、右側 `x = 688`、`右邊 = 808` 與警示區沒有互相遮擋。
+- 5：通過；`rect.x + rect.width ≤ WIDTH` → `x + 120 ≤ 800` → `x ≤ 680`，沒有把 800 當左邊上限。
+- 6：通過；`min(x, 680)` 與 `max(0, …)` 角色分明，`max(0, min(x, 680))` 可讀。
+- 7：通過；使用淺色 editor，不是深色終端機；程式碼 token、真實行號、父層 `class`／`def`、省略列與縮排均可辨識；第 54 行完整正確。
+- 8：通過；採用版三條流程均為 `min` 先、`max` 後：`-8 → -8 → 0`、`420 → 420 → 420`、`688 → 680 → 680`。
+- 9：通過；`800 - 200 = 600`、`800 - 80 = 720` 與 `最大左邊位置 = WIDTH - 物件寬度` 清楚，沒有把 680 寫死。
+- 全部圖片：16:9 橫式 PNG（1672×941），逐張原尺寸檢查無標題裁切、文字重疊、重要元素遮擋或外部來源；第 8 張初稿不列入採用版。
