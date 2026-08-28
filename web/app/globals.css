@@ -27,6 +27,9 @@ body {
   color: var(--ink);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     'Segoe UI', sans-serif;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
 }
 
 button,
@@ -34,9 +37,15 @@ kbd {
   font: inherit;
 }
 
+button {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
 .site-shell {
   display: grid;
   min-height: 100vh;
+  min-height: 100dvh;
   place-items: center;
   padding: 32px 20px;
 }
@@ -109,6 +118,7 @@ h1 {
 .game-region {
   position: relative;
   outline: none;
+  touch-action: none;
 }
 
 .game-region:focus-visible {
@@ -178,6 +188,11 @@ h1 {
   text-align: center;
 }
 
+.mobile-controls-note,
+.touch-controls {
+  display: none;
+}
+
 kbd {
   display: inline-block;
   min-width: 1.8em;
@@ -194,7 +209,10 @@ kbd {
 
 @media (max-width: 640px) {
   .site-shell {
-    padding: 12px;
+    padding: max(12px, env(safe-area-inset-top, 0px))
+      max(12px, env(safe-area-inset-right, 0px))
+      max(12px, env(safe-area-inset-bottom, 0px))
+      max(12px, env(safe-area-inset-left, 0px));
   }
 
   .game-card {
@@ -211,5 +229,88 @@ kbd {
 
   .status-pills {
     justify-content: start;
+  }
+}
+
+@media (pointer: coarse), (max-width: 640px) {
+  .mobile-controls-note {
+    display: block;
+    margin: 16px 0 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .touch-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 10px;
+    max-width: 520px;
+    margin: 12px auto 0;
+  }
+
+  .touch-button,
+  .touch-launch-button {
+    min-width: 44px;
+    min-height: 52px;
+    padding: 10px 16px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 14px;
+    background: rgba(30, 41, 59, 0.92);
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 1.35rem;
+    font-weight: 800;
+    touch-action: none;
+  }
+
+  .touch-launch-button {
+    min-width: 88px;
+    border-color: rgba(56, 189, 248, 0.55);
+    background: rgba(14, 116, 144, 0.8);
+    font-size: 0.95rem;
+  }
+
+  .touch-button:active,
+  .touch-launch-button:active {
+    transform: translateY(1px);
+    background: rgba(51, 65, 85, 0.98);
+  }
+
+  .touch-launch-button:active {
+    background: rgba(8, 145, 178, 0.92);
+  }
+
+  .touch-button:focus-visible,
+  .touch-launch-button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+@media (max-height: 560px) and (orientation: landscape) {
+  .site-shell {
+    align-items: start;
+    padding-top: max(12px, env(safe-area-inset-top, 0px));
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .game-card {
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  .intro-row {
+    margin-bottom: 14px;
+  }
+
+  .status-bar,
+  .controls-hint {
+    margin-top: 12px;
+  }
+
+  .touch-controls {
+    margin-top: 10px;
   }
 }

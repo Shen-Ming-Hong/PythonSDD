@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react';
 import {
   BACKGROUND,
   BALL_COLOR,
@@ -75,6 +75,54 @@ export default function Home() {
   });
   const [result, setResult] = useState<ResultState>('');
 
+  const clearInput = useCallback(() => {
+    inputRef.current.left = false;
+    inputRef.current.right = false;
+  }, []);
+
+  const syncHud = useCallback((state: GameState) => {
+    setHud({ lives: state.lives, score: state.score });
+    setResult(getResultState(state));
+  }, []);
+
+  const handleSpacePress = useCallback(() => {
+    const nextState = handleSpace(gameRef.current);
+    gameRef.current = nextState;
+    clearInput();
+    syncHud(nextState);
+    gameRegionRef.current?.focus({ preventScroll: true });
+  }, [clearInput, syncHud]);
+
+  const setTouchDirection = useCallback(
+    (direction: keyof InputState, active: boolean) => {
+      if (active && (gameRef.current.gameOver || gameRef.current.gameWon)) {
+        return;
+      }
+      inputRef.current[direction] = active;
+    },
+    [],
+  );
+
+  const handleTouchStart = useCallback(
+    (direction: keyof InputState, event: PointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setTouchDirection(direction, true);
+    },
+    [setTouchDirection],
+  );
+
+  const handleTouchEnd = useCallback(
+    (direction: keyof InputState, event: PointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+      setTouchDirection(direction, false);
+    },
+    [setTouchDirection],
+  );
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const gameRegion = gameRegionRef.current;
@@ -87,16 +135,6 @@ export default function Home() {
     let previousLives = gameRef.current.lives;
     let previousScore = gameRef.current.score;
     let previousResult = getResultState(gameRef.current);
-
-    const syncHud = (state: GameState) => {
-      setHud({ lives: state.lives, score: state.score });
-      setResult(getResultState(state));
-    };
-
-    const clearInput = () => {
-      inputRef.current.left = false;
-      inputRef.current.right = false;
-    };
 
     const isSpace = (event: KeyboardEvent) =>
       event.code === 'Space' || event.key === ' ' || event.key === 'Spacebar';
@@ -118,9 +156,7 @@ export default function Home() {
           return;
         }
 
-        const nextState = handleSpace(gameRef.current);
-        gameRef.current = nextState;
-        syncHud(nextState);
+        handleSpacePress();
         return;
       }
 
@@ -174,6 +210,9 @@ export default function Home() {
       if (nextResult !== previousResult) {
         previousResult = nextResult;
         setResult(nextResult);
+        if (nextResult) {
+          clearInput();
+        }
       }
 
       animationFrame = requestAnimationFrame(renderFrame);
@@ -195,7 +234,7 @@ export default function Home() {
       window.removeEventListener('blur', clearInput);
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
-  }, []);
+  }, [clearInput, handleSpacePress]);
 
   return (
     <main className="site-shell">
@@ -234,7 +273,7 @@ export default function Home() {
                 <div className="result-content">
                   <p className="result-kicker">ROUND COMPLETE</p>
                   <h2>{result === 'won' ? 'You Win' : 'Game Over'}</h2>
-                  <p className="result-hint">Press SPACE to restart</p>
+                  <p className="result-hint">按 SPACE 或下方按鈕重新開始</p>
                 </div>
               </div>
             )}
@@ -248,9 +287,44 @@ export default function Home() {
         </p>
 
         <p id="game-instructions" className="controls-hint">
-          準備開始：按 <kbd>SPACE</kbd> 發球，使用 <kbd>←</kbd> <kbd>→</kbd> 或{' '}
+          桌面：按 <kbd>SPACE</kbd> 發球，使用 <kbd>←</kbd> <kbd>→</kbd> 或{' '}
           <kbd>A</kbd> <kbd>D</kbd> 移動底板。
         </p>
+
+        <p className="mobile-controls-note">行動裝置：使用下方按鈕移動底板與發球。</p>
+
+        <div className="touch-controls" role="group" aria-label="行動裝置觸控操作">
+          <button
+            type="button"
+            className="touch-button"
+            aria-label="向左移動底板"
+            onPointerDown={(event) => handleTouchStart('left', event)}
+            onPointerUp={(event) => handleTouchEnd('left', event)}
+            onPointerCancel={(event) => handleTouchEnd('left', event)}
+            onLostPointerCapture={() => setTouchDirection('left', false)}
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            className="touch-launch-button"
+            aria-label={result ? '重新開始遊戲' : '發球'}
+            onClick={handleSpacePress}
+          >
+            {result ? '重玩' : '發球'}
+          </button>
+          <button
+            type="button"
+            className="touch-button"
+            aria-label="向右移動底板"
+            onPointerDown={(event) => handleTouchStart('right', event)}
+            onPointerUp={(event) => handleTouchEnd('right', event)}
+            onPointerCancel={(event) => handleTouchEnd('right', event)}
+            onLostPointerCapture={() => setTouchDirection('right', false)}
+          >
+            →
+          </button>
+        </div>
       </section>
     </main>
   );
