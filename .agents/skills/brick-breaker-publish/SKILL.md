@@ -1,6 +1,6 @@
 ---
 name: brick-breaker-publish
-description: "為 PythonSDD 的敲磚塊網站執行行動版檢查、建置、Sites 版本保存、PR 交付與公開發佈；當需要驗證或發布 web/ 時使用。"
+description: "為 PythonSDD 的敲磚塊網站執行行動版檢查、變更範圍審查、建置、Sites 版本保存、PR 交付與公開發佈；當需要修改、驗證或發布 web/ 時使用。"
 metadata:
   short-description: "行動版敲磚塊網站檢查與 Sites 公開發佈"
 ---
@@ -15,6 +15,25 @@ metadata:
 - 只重用 `web/.openai/hosting.json` 中已存在的 `project_id`。不要捏造、重排、替換或把 Site ID 寫死在技能中；設定檔缺少正式 ID 時先停止並要求確認。
 - 不把 token、cookie、短期認證、環境秘密或本機絕對路徑寫入 repo、技能、commit、封存檔或回報內容。
 - 不因這個靜態遊戲啟用 D1、R2、Auth、資料庫、登入、音效、多關卡或新的遊戲引擎。
+
+## Git 與變更範圍安全
+
+這些規則吸收自 GitHub 上其他專案的維護與 PR／發佈技能，但已縮減為本專案需要的範圍：
+
+1. 每次修改或準備交付前，先執行 `git status --short --branch`、`git diff --stat`，再讀取相關 diff；保留使用者既有的 dirty worktree，不使用 reset、破壞性 checkout 或 force push。
+2. 只有在準備執行已獲授權的 push／PR／部署時，才執行 `git fetch origin` 並檢查目前分支與遠端的 ahead／behind。若工作區 dirty、分支 diverged 或來源 commit 尚未推送，先停下來整理狀態，不把本機檔案直接當成可發布版本。
+3. 發佈前明確分類變更範圍；目前專案的基本對照如下：
+
+   | 變更位置 | 影響範圍 | 必要閘門 |
+   |---|---|---|
+   | `web/app/page.tsx`、`web/app/game.ts` | 首頁 `/` 的遊戲行為／介面 | web lint、TypeScript、build；若涉及介面則人工 UI 驗收 |
+   | `web/app/globals.css`、`web/app/layout.tsx` | 首頁 `/` 的全域版面／viewport | web lint、TypeScript、build；行動版矩陣驗收 |
+   | `web/.openai/hosting.json` | Sites 部署目標 | 檢查既有 `project_id`，確認版本與來源 commit 對應 |
+   | `specs/`、`.agents/skills/` | SDD／維護流程 | 文件一致性與技能 validator；不會單獨產生網站版本 |
+
+4. 任何修正完成後都要重新檢視 diff，並重跑受影響的品質檢查；不能因先前檢查通過而跳過修正後的回歸。
+
+ITS 專案中的 Cloudflare、D1／R2、`questions:check`、大型 repo 變更分類腳本與學習記錄腳本不屬於本專案；本技能不複製或捏造這些命令。
 
 ## 發佈前檢查
 
@@ -72,6 +91,24 @@ python3 -m py_compile Day1/*.py Day2/*.py
 4. 低高度橫向視窗仍能操作；回到桌面後 Space、方向鍵與 A／D 仍可用。
 
 若使用者尚未提供人工驗收結果，將狀態標為「待人工驗收」，不可宣稱行動版已公開。
+
+若本次變更觸及 `web/app/` 的介面或版面，人工檢查使用同一條路由 `/` 的固定矩陣，避免只在單一桌面尺寸驗收：
+
+| 視窗 | 用途 |
+|---|---|
+| 1440×900 | 桌面鍵盤回歸 |
+| 1024×768 | 平板／窄桌面版面 |
+| 390×844 | 直向手機與安全區 |
+| 844×390 | 橫向低高度手機 |
+
+每個尺寸至少確認無水平溢出、遊戲控制穩定、觸控目標可操作、鍵盤／焦點不回歸，以及結果提示／固定控制不互相遮擋。未實際檢查或未取得使用者結果時，明確標記「待人工驗收」，不以 lint、build 或靜態搜尋代替。
+
+## 本地 Review 與發佈閘門
+
+- 將本地 code review 與外部交付分開：先判斷問題是否阻擋品質，再處理 push、PR、Sites 版本或 production deploy。P0 指安全、資料遺失、主路由無法載入、建置／部署阻斷等發布阻斷問題；P1 指核心遊戲操作、行動版版面或可及性明顯失效；P2 指不阻斷主要流程的可維護性或體驗改善。P0／P1 必須在 PR 或部署前修正；P2 若不在本次範圍則記錄理由。
+- 使用者明確要求修正時，修正後必須重新跑相關檢查並重新讀取 diff；使用者只要求 review 時，停在 review 結果，不自行修改或發布。
+- push、建立／更新 PR、合併、保存 Sites 版本與 production deploy 都是獨立的外部動作；除非使用者明確要求，不從「本機檢查通過」推定已授權這些動作。
+- 若未來加入 GitHub Actions，必須等待與目前 commit 對應的 workflow 完成後才能宣稱交付成功；目前 repo 沒有可取代本地 `npm run lint`／TypeScript／build 的專案 CI 閘門。
 
 ## Sites 版本與部署
 

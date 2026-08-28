@@ -56,13 +56,14 @@ description: "敲磚塊行動版體驗與發佈流程的可執行任務"
 
 ## Phase 6：驗證與文件收尾
 
-**目的**：完成程式、技能與 SDD 文件的品質閘門；保留行動裝置人工驗收供使用者確認。
+**目的**：完成程式、技能與 SDD 文件的品質閘門，並記錄行動裝置人工驗收結果。
 
 - [X] T016 [P] 在 `web/` 執行 `npm run lint`、`./node_modules/.bin/tsc --noEmit` 與 `npm run build`
 - [X] T017 [P] 在 repo 根目錄執行 `python3 -m py_compile Day1/*.py Day2/*.py`，確認既有教學檔案未受影響
 - [X] T018 [P] 執行 `quick_validate.py` 驗證 `.agents/skills/brick-breaker-publish/`
-- [ ] T019 在 `specs/003-mobile-web-optimization/quickstart.md` 依 M-001 至 M-007 完成行動裝置或裝置模擬人工驗收並記錄結果
+- [X] T019 依使用者提供的人工測試結果，在 `specs/003-mobile-web-optimization/quickstart.md` 記錄 M-001 至 M-007 均通過；不補寫未取得的裝置或瀏覽器細節
 - [X] T020 在 `specs/003-mobile-web-optimization/checklists/requirements.md` 更新建置、技能格式與人工驗收狀態；若未收到公開部署要求，不執行 Sites 部署
+- [X] T021 參考 GitHub 其他 repository 的維護／PR／發佈技能，將適用的 Git preflight、變更範圍分類、固定 viewport 矩陣、review／release gate 與不適用流程的排除條件納入 `.agents/skills/brick-breaker-publish/SKILL.md` 與 `research.md`，並重新執行技能 validator、文件一致性與 diff 檢查
 
 ## 相依性與執行順序
 
@@ -72,7 +73,7 @@ description: "敲磚塊行動版體驗與發佈流程的可執行任務"
 - Phase 2 必須先於使用者故事實作，因為 US1 與 US2 共用輸入與頁面生命週期邊界。
 - Phase 3 與 Phase 4 依賴 Phase 2；T010、T011 可平行，T012 依賴相同 CSS 結構但可與 T010 平行。
 - Phase 5 可在 Phase 1 完成後建立，驗證時需使用已完成的網站來源與 `hosting.json`。
-- Phase 6 需在所有程式與技能任務完成後執行；T019 是本次交付前仍需使用者／測試者完成的人工閘門。
+- Phase 6 需在所有程式與技能任務完成後執行；T019 的人工驗收結果已由使用者回報並記錄，Sites 發佈仍是獨立的外部交付閘門。
 
 ### 使用者故事相依性
 
@@ -93,5 +94,5 @@ T014 openai.yaml ─┘     └→ T018 skill validator
 
 - 所有與程式、文件及技能建立相關的任務標記完成。
 - `npm run lint`、TypeScript、`npm run build`、Python 語法檢查與技能格式驗證成功。
-- 行動版 M-001 至 M-007 的人工驗收結果已記錄；未完成者不得宣稱已公開行動版。
+- 行動版 M-001 至 M-007 的人工驗收結果已記錄；未完成 Sites 發佈前不得宣稱已公開新版。
 - 若使用者另行要求公開發佈，才依專案技能建立 Sites 版本、送出 PR 並部署；本任務本身不自動覆蓋既有公開網址。

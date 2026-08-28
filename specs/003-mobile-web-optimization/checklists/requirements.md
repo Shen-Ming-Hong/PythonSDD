@@ -13,6 +13,7 @@
 - [x] `web/app/page.tsx`、`web/app/globals.css` 與 `web/app/layout.tsx` 已列為受影響檔案。
 - [x] 未新增 npm 套件、資料庫、D1、R2、Auth 或遊戲引擎。
 - [x] `.agents/skills/brick-breaker-publish/` 已列為專案交付物，且包含 Sites 設定重用與秘密處理規則。
+- [x] 已參考 GitHub 其他專案，納入可移植的 Git preflight、固定 viewport UI 矩陣、review／release gate，並排除 Cloudflare、VSIX 與課程專用流程。
 - [x] 發佈技能規定先通過 lint、TypeScript 與 production build。
 - [x] 發佈技能規定沒有明確公開要求時不得覆蓋既有公開網站。
 
@@ -21,5 +22,5 @@
 - [x] 已完成程式與 SDD 文件初稿。
 - [x] `npm run lint`、TypeScript 與 `npm run build` 驗證通過。
 - [x] 專案技能通過 `quick_validate.py`。
-- [ ] 行動裝置人工驗收 M-001 至 M-007 通過。
+- [x] 依使用者回報，行動裝置人工驗收 M-001 至 M-007 均通過，結果已記錄於 `quickstart.md`。
 - [ ] 若之後要求公開發佈，已以通過驗收的 commit 建立 Sites 版本並驗證網址。

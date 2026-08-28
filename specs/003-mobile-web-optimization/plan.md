@@ -8,7 +8,7 @@
 
 本功能在不改變既有遊戲規則與公開網站專案識別的前提下，改善 `web/` 敲磚塊網站的行動裝置體驗。瀏覽器遊戲保留 800×600 內部座標與 4:3 畫布，新增使用 Pointer Events 的左右觸控按鈕，以及發球／重玩按鈕；桌面上的 Space、方向鍵與 A／D 操作維持不變。版面將處理裝置 viewport、瀏海安全區、動態視窗高度、窄螢幕與低高度橫向視窗。
 
-同一個功能分支新增 `.agents/skills/brick-breaker-publish/` 專案技能，將目前 Sites 發佈經驗整理成可重複的檢查、建置、版本保存、PR 與公開部署流程。本次只建立與驗證流程，不因行動版修改而自動覆蓋既有公開網站。
+同一個功能分支新增 `.agents/skills/brick-breaker-publish/` 專案技能，將目前 Sites 發佈經驗與 GitHub 其他專案中可移植的安全維護原則整理成可重複的檢查、建置、版本保存、PR 與公開部署流程。本次只建立與驗證流程，不因行動版修改而自動覆蓋既有公開網站。
 
 ## 技術背景
 
@@ -54,6 +54,7 @@
 2. 維持單一 800×600 Canvas，使用 CSS `width: 100%` 與 `aspect-ratio: 4 / 3` 縮放，避免為手機建立不同遊戲座標或第二套碰撞邏輯。
 3. 以 `(pointer: coarse)` 或 `max-width: 640px` 顯示觸控控制；觸控目標至少 44px，並以 `env(safe-area-inset-*)`、`100dvh` 與橫向低高度查詢處理行動瀏覽器差異。
 4. 發佈技能只讀取既有 `web/.openai/hosting.json`；公開部署必須由使用者明確要求，且只部署已通過品質閘門並與 commit 對應的 Sites 版本。
+5. 參考 GitHub 其他專案後，發佈技能補上變更範圍分類、1440×900／1024×768／390×844／844×390 固定 UI 矩陣、P0／P1／P2 review 判斷、修正後重新檢查，以及「CI／外部交付不可由本機 build 推定成功」的規則；Cloudflare、D1／R2、VSIX 與課程專用流程不納入。
 
 ## 設計
 
@@ -74,6 +75,7 @@
 
 - 技能放在 `.agents/skills/brick-breaker-publish/`，包含標準 `SKILL.md` 與 `agents/openai.yaml`，由 `skill-creator` 驗證。
 - 技能順序為：確認功能分支與文件 → 檢查行動版條件 → 執行 lint／型別／build → 確認 `hosting.json` 的既有 project id → 建立可追蹤 Site 版本 → 依需求交付 PR／部署。
+- 技能另會先分類變更影響範圍，並在任何修正後重讀 diff 與重跑受影響檢查；本機 review、PR／push 與 Sites production deploy 是分開的授權閘門。
 - 認證 token 只可用短暫命令環境傳遞；技能不保存 token、不捏造 project id、不在未獲明確授權時公開部署。
 
 ## 研究與設計產物
