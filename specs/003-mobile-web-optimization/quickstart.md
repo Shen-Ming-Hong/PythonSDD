@@ -83,4 +83,4 @@ python3 /Users/user/.codex/skills/.system/skill-creator/scripts/quick_validate.p
 3. 送出功能分支 PR；不在技能內自動合併。
 4. 部署後驗證公開網址的 HTTP 狀態與主要頁面可載入性。
 
-本次功能目前只完成來源與技能準備，不覆蓋既有公開網站。
+本次功能已依明確要求完成來源驗證、Sites 版本保存與公開部署；部署後公開首頁 HTTP 狀態為 200。PR 仍須依專案憲章完成審查與合併。

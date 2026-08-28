@@ -23,4 +23,4 @@
 - [x] `npm run lint`、TypeScript 與 `npm run build` 驗證通過。
 - [x] 專案技能通過 `quick_validate.py`。
 - [x] 依使用者回報，行動裝置人工驗收 M-001 至 M-007 均通過，結果已記錄於 `quickstart.md`。
-- [ ] 若之後要求公開發佈，已以通過驗收的 commit 建立 Sites 版本並驗證網址。
+- [x] 已依明確公開要求，以通過驗收的網站來源 commit 建立 Sites 版本、完成部署並驗證公開首頁 HTTP 200。
