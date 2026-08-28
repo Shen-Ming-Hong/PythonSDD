@@ -1,0 +1,4 @@
+interface:
+  display_name: "敲磚塊行動版發佈"
+  short_description: "行動版敲磚塊網站檢查、建置、Sites 發佈與 PR 交付流程"
+  default_prompt: "使用 $brick-breaker-publish 檢查並準備目前的敲磚塊網站發佈。"
