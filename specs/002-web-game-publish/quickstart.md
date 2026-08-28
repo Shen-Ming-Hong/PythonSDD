@@ -110,7 +110,7 @@ npm run dev
 - `./.venv/bin/python -m py_compile Day2/prj06_lives_restart.py Day2/prj07_win.py`：通過。
 - `git diff --check`：通過；既有 `Day2/prj06_lives_restart.py`、`Day2/prj07_win.py` 與 `requirements.txt` 未被修改。
 - 本機 `http://localhost:3000/` 回應 `200`，頁面標題為 `敲磚塊｜Brick Breaker`。
-- Sites 公開部署尚未執行；需待上述人工測試完成後再執行任務 T022。
+- Sites 公開部署已完成；production 公開網址為 https://brick-breaker-game.t105360043.chatgpt.site，HTTP 回應 `200`，頁面標題為 `敲磚塊｜Brick Breaker`。
 
 ## 相關設計參考
 

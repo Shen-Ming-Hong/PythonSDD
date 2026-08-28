@@ -77,7 +77,7 @@
 - [X] T019 [US3] 在 `web/.openai/hosting.json` 確認 Sites 專案 metadata 只包含本功能必要設定，不加入 D1、R2、Auth 或秘密；若 Sites 尚未產生 project id，保留給發佈階段建立，不自行編造識別值。
 - [X] T020 [US3] 在 `web/package.json` 執行最終 `npm run build`，確認建置輸出、靜態資產、metadata 與 Sites hosting 設定可被交付流程使用。
 - [X] T021 [US3] 依 `specs/002-web-game-publish/quickstart.md` 完成本機建置、頁面回應與既有 `Day2/prj06_lives_restart.py`／`Day2/prj07_win.py` 回歸檢查，並將可由工具確認的結果記錄在 `specs/002-web-game-publish/quickstart.md`。
-- [ ] T022 [US3] **人工測試已通過，執行公開發佈**：使用 Sites 建立／沿用 `web/.openai/hosting.json` 的網站、保存已驗證版本、公開部署並在未登入新瀏覽器視窗驗證公開網址。
+- [X] T022 [US3] **人工測試已通過，完成公開發佈**：使用 Sites 建立／沿用 `web/.openai/hosting.json` 的網站、保存已驗證版本、公開部署並在未登入新瀏覽器視窗驗證公開網址。
 
 ## 階段 6：收尾與跨情境驗證
 
